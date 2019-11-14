@@ -144,4 +144,4 @@ def predict():
         return render_template('results.html', prediction=pred_df, test = test)
 
 if __name__ == '__main__':
-    app.run(debug = True)
+    app.run(debug = True, port=80)
