@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Berkshire+Swash|Love+Ya+Like+A+Sister|Ubuntu&display=swap" rel="stylesheet">
+    <style>
+    html{
+        font-size: 20px;
+    }
+    body{
+        height: 100vh;
+        width: 100%;
+        margin: 0;
+        font-family: 'Ubuntu', sans-serif;
+    }
+    input, button{
+        font-family: 'Ubuntu', sans-serif;
+        background: white;
+        font-size: 1rem;
+        padding: 15px;
+        border: 0px solid white;
+        border-radius: 10px;
+    }
+    h1{
+        font-family: 'Berkshire Swash', cursive;
+        font-size: 5rem;
+    }
+    span{
+        font-family: 'Love Ya Like A Sister', cursive;
+    }
+    .buttonbox{
+        position:absolute;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        bottom: 0;
+        padding-bottom: 30px;
+    }
+    div.buttonbox button{
+        /* height: 50px; */
+        padding: 20px;
+        background: skyblue;
+        border-radius: 10px;
+        margin-left: 15px;
+    }
+    canvas{
+        border: 1px dotted black;
+    }
+    #submit-form{
+        position: absolute;
+        left: -999px;
+    }
+    #header_div{
+        position:absolute;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100%;
+        background-image: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1515041219749-89347f83291a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1267&q=80');
+        background-size: cover;
+        background-position: top;
+        color: white;
+        z-index: 10;
+        bottom: 0;
+        transition: bottom 2s;
+    }
+    .fighter_box{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+    .fighter_box label{
+        height: 70%;
+        width: 10%;
+        padding: 20px;
+    }
+    .fighter_box img{
+        display: block;
+        height: 100%;
+        width: 100%;
+        border-radius: 10px;
+        box-shadow: 2px 0px 4px white;
+    }
+    input[type="radio"]{
+        display: none;
+    }
+    input[type="radio"]:checked + label{
+      filter: brightness(0.5);
+    }
+    </style>
+    <title>Capstone</title>
+
+  </head>
+  <body>
+    <header id="header_div">
+        <h1>Happy Little <span>Accidents</span></h1>
+        <h2>Are you ready to discover your inner Picasso?</h2>
+        <h3>Choose your fighter</h3>
+        <input type = "text" name ="fightertext"  id="fightertext" >
+        <div class = "fighter_box">
+            <input type="radio" name="fighter" value="morty" id="morty">
+            <label for="morty"><img src="https://i.imgur.com/ztce6u4.png"></label>
+            <input type="radio" name="fighter" value="homer" id="homer">
+            <label for="homer"><img src="https://i.imgur.com/fBhgRTr.png"></label>
+            <input type="radio" name="fighter" value="rick" id = "rick">
+            <label for="rick"><img src="https://i.imgur.com/U52JiN0.png"></label>
+            <input type="radio" name="fighter" value="spongebob" id= "spongebob">
+            <label for="spongebob"><img src="https://i.imgur.com/aKkEezV.png"></label>
+            <input type="radio" name="fighter" value="pikachu" id = "pikachu">
+            <label for="pikachu"><img src="https://66.media.tumblr.com/60aeee62dc1aee0c3c0fbad1702eb860/tumblr_inline_pfp352ORsk1r4hkfd_250.png"></label>
+            <input type="radio" name="fighter" value="patrick" id = "patrick">
+            <label for="patrick"><img src="https://i.imgur.com/1B7K61r.png?1"></label>
+        </div>
+        <input type="submit" name="fighter" value="Let's go!" id = "header_submit">
+    </header>
+    <div class = "buttonbox">
+        <button type = "button" id = "clearbutton">Clear Canvas</button>
+        <button type = "button" id = "btnDisplay">Rate it</button>
+    </div>
+    <canvas id = "myCanvas"></canvas>
+    <form method = "POST" action="/result" id="submit-form">
+        <!-- <input type = "submit" id = "btnSubmit">Submit</button> -->
+    </form>
+
+
+
+    <script>
+    window.addEventListener("load", () => {
+      const myCanvas = document.querySelector("#myCanvas");
+      // console.log("hello2")
+      const clear_btn = document.querySelector("#clearbutton");
+      // console.log("hello3")
+      const btnDisplay = document.querySelector("#btnDisplay");
+
+      const header_hider = document.querySelector("#header_submit");
+      // console.log("hello4")
+      const ctx = myCanvas.getContext("2d");
+      // console.log("hello5")
+
+      myCanvas.height = window.innerHeight;
+      myCanvas.width = window.innerWidth;
+      // console.log("hello6");
+
+
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, myCanvas.width, myCanvas.height);
+
+
+      // vars
+      let painting = false;
+
+      // functions
+      function startDrawing(e){
+        painting = true;
+        draw(e);
+      }
+      function endDrawing(){
+        painting = false;
+        ctx.beginPath();
+      }
+
+      function draw(e){
+        if (!painting) return;
+        ctx.linewidth = 500;
+        ctx.lineCap = "round";
+        ctx.strokeStyle = "black";
+
+        ctx.lineTo(e.clientX, e.clientY);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(e.clientX, e.clientY);
+      }
+      function clear_canvas(){
+          ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+      }
+      // event listeners
+      myCanvas.addEventListener("mousedown", startDrawing);
+      // console.log("hello7")
+      myCanvas.addEventListener("mouseup", endDrawing);
+      // console.log("hello8")
+      myCanvas.addEventListener("mousemove", draw);
+      // console.log("hello9")
+      clear_btn.addEventListener("click", clear_canvas);
+
+      header_hider.addEventListener("click", function(e){
+          var header_div = document.getElementById('header_div');
+          header_div.style.display = "none";
+      });
+
+      btnDisplay.addEventListener("click", function(e){
+            const dataURI = myCanvas.toDataURL();
+
+            // create a variable referencing html form
+
+            // document.getElementById('test_p').innerHTML=dataURI;
+            var form = document.getElementById('submit-form');
+            // add hidden field conytaining image
+            imageField = document.createElement('input');
+            imageField.name = 'imgConverted';
+            imageField.value = dataURI;
+            // print(dataURI)
+
+            form.appendChild(imageField);
+            // submit form
+            form.submit()
+        });
+        header_hider.addEventListener("click", function(e){
+            label_char_value = document.getElementsByName('fightertext')[0].value
+              // document.getElementById('test_p').innerHTML=dataURI;
+            var form = document.getElementById('submit-form');
+              // add hidden field conytaining image
+            labelField = document.createElement('input');
+            labelField.name = 'label_char';
+            labelField.value = label_char_value;
+              // print(dataURI)
+            form.appendChild(labelField);
+              // submit form
+          });
+
+
+        // var button = document.getElementById('downloadLink');
+        // button.addEventListener('click', function (e) {
+        //     var dataURL = myCanvas.toDataURL('image/png');            button.href = dataURL;
+        // });
+    });
+    </script>
+  </body>
+</html>
